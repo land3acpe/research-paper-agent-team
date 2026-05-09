@@ -53,6 +53,11 @@ class PapersRepo:
             "SELECT * FROM papers WHERE title_hash = ?", (title_hash,)
         ).fetchone())
 
+    def list_by_title_hash(self, title_hash: str) -> list[sqlite3.Row]:
+        return list(self.conn.execute(
+            "SELECT * FROM papers WHERE title_hash = ? ORDER BY id", (title_hash,)
+        ).fetchall())
+
     def get_by_source_id(self, source: str, source_id: str) -> sqlite3.Row | None:
         return _row(self.conn.execute(
             "SELECT * FROM papers WHERE source = ? AND source_id = ?", (source, source_id)
