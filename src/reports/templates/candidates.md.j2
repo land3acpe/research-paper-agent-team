@@ -1,0 +1,24 @@
+# 论文查新候选清单
+
+- **Run ID**：{{ run_id }}
+- **生成时间**：{{ generated_at }}
+- **候选数**：{{ papers | length }}
+
+{% if not papers %}
+本轮未发现候选论文。
+{% else %}
+{% for p in papers %}
+## {{ loop.index }}. {{ p.title }}
+
+- **来源**：{{ p.source }}{% if p.source_id %} (`{{ p.source_id }}`){% endif %}
+- **DOI**：{% if p.doi %}`{{ p.doi }}`{% else %}—{% endif %}
+- **期刊/会议**：{{ p.venue or "—" }}
+- **发表日期**：{{ p.published_date or "—" }}
+- **作者**：{% if p.authors %}{{ p.authors | join(", ") }}{% else %}—{% endif %}
+- **链接**：{% if p.url %}<{{ p.url }}>{% else %}—{% endif %}
+
+{% if p.abstract %}**摘要**：{{ p.abstract | truncate(500) }}{% endif %}
+
+---
+{% endfor %}
+{% endif %}

@@ -1,0 +1,35 @@
+# Run Summary — {{ summary.run_id }}
+
+- **状态**：{{ summary.status }}
+- **开始**：{{ summary.started_at }}
+- **结束**：{{ summary.ended_at or "—" }}
+- **Dry-run**：{{ "是" if summary.dry_run else "否" }}
+
+## 计数
+
+| 阶段 | 数量 |
+|---|---:|
+| Raw（原始） | {{ summary.raw_count }} |
+| Normalized | {{ summary.normalized_count }} |
+| Deduped | {{ summary.deduped_count }} |
+| Filtered（通过 rule filter） | {{ summary.filtered_count }} |
+| Failed | {{ summary.failed_count }} |
+
+## 数据源
+
+| 源 | 查询 | Raw | Normalized | 错误 |
+|---|---|---:|---:|---|
+{% for s in summary.sources %}| {{ s.source }} | {{ s.query }} | {{ s.raw_count }} | {{ s.normalized_count }} | {{ s.errors | length }} |
+{% endfor %}
+
+{% if summary.errors %}
+## 错误
+
+{% for e in summary.errors %}- {{ e }}
+{% endfor %}
+{% endif %}
+
+## 报告路径
+
+- Candidates report: `{{ summary.report_path or "—" }}`
+- Log: `{{ summary.log_path or "—" }}`
