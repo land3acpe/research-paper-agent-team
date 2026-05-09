@@ -1,0 +1,18 @@
+sources:
+  crossref:
+    enabled: true
+    mailto_env: "CROSSREF_MAILTO"
+    queries:
+      - name: "dtp_pmsm"
+        query: "dual three-phase PMSM"
+      - name: "harmonic_suppression"
+        query: "harmonic current suppression motor drive"
+    max_results: 100
+
+  arxiv:
+    enabled: true
+    categories: ["eess.SY"]
+    queries:
+      - name: "motor_control_ai"
+        query: "motor control neural network parameter identification"
+    max_results: 100

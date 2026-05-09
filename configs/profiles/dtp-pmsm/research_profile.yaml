@@ -1,0 +1,21 @@
+research_profile:
+  name: "DTP-PMSM Harmonic Current Suppression"
+  slug: "dtp-pmsm"
+  field: "dual three-phase permanent magnet synchronous motor harmonic current suppression"
+
+  core_topics:
+    - "dual three-phase PMSM"
+    - "six-phase PMSM"
+    - "multiphase motor"
+    - "harmonic current suppression"
+    - "vector space decomposition"
+
+  reject_topics:
+    - "power system harmonic compensation without motor drive relevance"
+    - "mechanical design only"
+
+  rule_filter:
+    require_year_after: 2018
+    require_abstract: true
+    blacklist_keywords:
+      - "review article only"

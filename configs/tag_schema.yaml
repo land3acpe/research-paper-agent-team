@@ -1,0 +1,7 @@
+# MVP1 占位；MVP2 引入 Screening Agent 时启用
+allowed_tags:
+  topics: []
+  methods: []
+  parameters: []
+  status: []
+  priority: []
