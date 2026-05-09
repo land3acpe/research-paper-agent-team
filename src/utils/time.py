@@ -1,7 +1,7 @@
 """Time window utilities for paper discovery."""
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 
 def compute_window(
@@ -14,7 +14,7 @@ def compute_window(
     Window length = days + overlap_days, ending at `now`.
     """
     if now is None:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
     start = now - timedelta(days=days + overlap_days)
     return start, now
 

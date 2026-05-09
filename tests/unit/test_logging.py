@@ -1,7 +1,5 @@
 import json
 
-import structlog
-
 from src.logging_config import configure_logging
 
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 import sys
 from pathlib import Path
+from typing import cast
 
 import structlog
 
@@ -41,4 +42,4 @@ def configure_logging(
         cache_logger_on_first_use=True,
     )
 
-    return structlog.get_logger()
+    return cast(structlog.stdlib.BoundLogger, structlog.get_logger())

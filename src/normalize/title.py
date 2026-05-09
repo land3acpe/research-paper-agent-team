@@ -4,7 +4,6 @@ from __future__ import annotations
 import re
 import unicodedata
 
-
 _HTML_TAG = re.compile(r"<[^>]+>")
 _PUNCT = re.compile(r"[^\w\s-]")
 _WS = re.compile(r"\s+")

@@ -1,11 +1,11 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
 
+from src.models.dedup import DedupCandidate
 from src.models.paper import PaperCandidate
 from src.models.run import RunSummary, SourceResult
-from src.models.dedup import DedupCandidate
 
 
 def test_paper_candidate_minimal():
@@ -38,7 +38,7 @@ def test_paper_candidate_requires_title():
 
 def test_run_summary_defaults():
     s = RunSummary(
-        run_id="x", started_at=datetime.now(timezone.utc).isoformat(), status="running"
+        run_id="x", started_at=datetime.now(UTC).isoformat(), status="running"
     )
     assert s.raw_count == 0
     assert s.errors == []

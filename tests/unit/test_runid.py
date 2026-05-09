@@ -1,10 +1,9 @@
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
 from src.utils.runid import generate_run_id, parse_run_id
-
 
 RUN_ID_PATTERN = re.compile(
     r"^[a-z0-9-]+-(daily|weekly|monthly|manual)-\d{8}-\d{6}-[a-z0-9]{8}$"
@@ -22,7 +21,7 @@ def test_generate_run_id_unique():
 
 
 def test_generate_run_id_uses_timestamp():
-    fixed = datetime(2026, 5, 10, 9, 0, 0, tzinfo=timezone.utc)
+    fixed = datetime(2026, 5, 10, 9, 0, 0, tzinfo=UTC)
     rid = generate_run_id("dtp-pmsm", "weekly", now=fixed)
     assert "20260510-090000" in rid
 

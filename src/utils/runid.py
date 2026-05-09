@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Literal
 
 import shortuuid
@@ -35,7 +35,7 @@ def generate_run_id(
     now: datetime | None = None,
 ) -> str:
     if now is None:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
     ts = now.strftime("%Y%m%d-%H%M%S")
     short = shortuuid.uuid()[:8].lower()
     return f"{profile_slug}-{schedule_mode}-{ts}-{short}"
@@ -47,7 +47,7 @@ def parse_run_id(run_id: str) -> RunIdParts:
         raise ValueError(f"invalid run_id: {run_id}")
     ts = datetime.strptime(
         f"{m['date']}{m['time']}", "%Y%m%d%H%M%S"
-    ).replace(tzinfo=timezone.utc)
+    ).replace(tzinfo=UTC)
     return RunIdParts(
         profile_slug=m["slug"],
         schedule_mode=m["mode"],
