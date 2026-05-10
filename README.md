@@ -1,7 +1,7 @@
 # research-paper-agent-team
 
 [![CI](https://img.shields.io/badge/ci-github%20actions-blue)](https://github.com/land3acpe/research-paper-agent-team/actions)
-[![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen)](https://github.com/land3acpe/research-paper-agent-team/actions)
+[![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/land3acpe/research-paper-agent-team/actions)
 [![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![Status](https://img.shields.io/badge/status-MVP1-orange)](./CHANGELOG.md)
