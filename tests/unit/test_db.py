@@ -14,9 +14,7 @@ def test_apply_migrations_creates_tables(tmp_path: Path) -> None:
     db_path = tmp_path / "test.db"
     conn = open_db(db_path)
     apply_migrations(conn)
-    cur = conn.execute(
-        "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
-    )
+    cur = conn.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
     tables = {row[0] for row in cur.fetchall()}
     assert {"papers", "runs", "filter_decisions", "dedup_candidates", "schema_versions"} <= tables
     conn.close()

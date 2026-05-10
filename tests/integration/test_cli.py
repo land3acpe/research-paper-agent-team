@@ -73,9 +73,18 @@ def test_cli_discover_dry_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
     result = runner.invoke(
         app,
         [
-            "--config-dir", str(cfg), "--profile", "dtp-pmsm",
-            "discover", "--db-path", str(db), "--data-dir", str(data),
-            "--days", "14", "--dry-run",
+            "--config-dir",
+            str(cfg),
+            "--profile",
+            "dtp-pmsm",
+            "discover",
+            "--db-path",
+            str(db),
+            "--data-dir",
+            str(data),
+            "--days",
+            "14",
+            "--dry-run",
         ],
     )
 

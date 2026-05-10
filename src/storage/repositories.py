@@ -1,4 +1,5 @@
 """Repository layer over SQLite."""
+
 from __future__ import annotations
 
 import json
@@ -28,7 +29,9 @@ class PapersRepo:
     def __init__(self, conn: sqlite3.Connection) -> None:
         self.conn = conn
 
-    def insert(self, p: PaperCandidate, status: str = "candidate", run_id: str | None = None) -> int:
+    def insert(
+        self, p: PaperCandidate, status: str = "candidate", run_id: str | None = None
+    ) -> int:
         cur = self.conn.execute(
             """
             INSERT INTO papers (
@@ -38,9 +41,25 @@ class PapersRepo:
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
-                p.doi, p.title, p.normalized_title, p.title_hash, p.source, p.source_id,
-                p.url, p.pdf_url, json.dumps(p.authors), p.venue, p.published_date, p.indexed_date,
-                p.abstract, json.dumps(p.keywords), status, json.dumps(p.raw), run_id, _now(), _now(),
+                p.doi,
+                p.title,
+                p.normalized_title,
+                p.title_hash,
+                p.source,
+                p.source_id,
+                p.url,
+                p.pdf_url,
+                json.dumps(p.authors),
+                p.venue,
+                p.published_date,
+                p.indexed_date,
+                p.abstract,
+                json.dumps(p.keywords),
+                status,
+                json.dumps(p.raw),
+                run_id,
+                _now(),
+                _now(),
             ),
         )
         return _insert_id(cur)
@@ -49,25 +68,31 @@ class PapersRepo:
         return _row(self.conn.execute("SELECT * FROM papers WHERE doi = ?", (doi,)).fetchone())
 
     def get_by_title_hash(self, title_hash: str) -> sqlite3.Row | None:
-        return _row(self.conn.execute(
-            "SELECT * FROM papers WHERE title_hash = ?", (title_hash,)
-        ).fetchone())
+        return _row(
+            self.conn.execute("SELECT * FROM papers WHERE title_hash = ?", (title_hash,)).fetchone()
+        )
 
     def list_by_title_hash(self, title_hash: str) -> list[sqlite3.Row]:
-        return list(self.conn.execute(
-            "SELECT * FROM papers WHERE title_hash = ? ORDER BY id", (title_hash,)
-        ).fetchall())
+        return list(
+            self.conn.execute(
+                "SELECT * FROM papers WHERE title_hash = ? ORDER BY id", (title_hash,)
+            ).fetchall()
+        )
 
     def get_by_source_id(self, source: str, source_id: str) -> sqlite3.Row | None:
-        return _row(self.conn.execute(
-            "SELECT * FROM papers WHERE source = ? AND source_id = ?", (source, source_id)
-        ).fetchone())
+        return _row(
+            self.conn.execute(
+                "SELECT * FROM papers WHERE source = ? AND source_id = ?", (source, source_id)
+            ).fetchone()
+        )
 
     def list_by_run(self, run_id: str) -> list[sqlite3.Row]:
-        return list(self.conn.execute(
-            "SELECT * FROM papers WHERE run_id = ? ORDER BY created_at DESC",
-            (run_id,),
-        ).fetchall())
+        return list(
+            self.conn.execute(
+                "SELECT * FROM papers WHERE run_id = ? ORDER BY created_at DESC",
+                (run_id,),
+            ).fetchall()
+        )
 
 
 class RunsRepo:
@@ -84,10 +109,20 @@ class RunsRepo:
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
-                s.run_id, profile_slug, schedule_mode, s.started_at, s.ended_at,
-                s.status, json.dumps([sr.model_dump() for sr in s.sources]),
-                s.raw_count, s.normalized_count, s.deduped_count,
-                s.filtered_count, s.failed_count, s.report_path, s.log_path,
+                s.run_id,
+                profile_slug,
+                schedule_mode,
+                s.started_at,
+                s.ended_at,
+                s.status,
+                json.dumps([sr.model_dump() for sr in s.sources]),
+                s.raw_count,
+                s.normalized_count,
+                s.deduped_count,
+                s.filtered_count,
+                s.failed_count,
+                s.report_path,
+                s.log_path,
                 1 if s.dry_run else 0,
             ),
         )
@@ -102,24 +137,36 @@ class RunsRepo:
             WHERE run_id=?
             """,
             (
-                s.ended_at, s.status, json.dumps([sr.model_dump() for sr in s.sources]),
-                s.raw_count, s.normalized_count, s.deduped_count,
-                s.filtered_count, s.failed_count, s.report_path, s.log_path, s.run_id,
+                s.ended_at,
+                s.status,
+                json.dumps([sr.model_dump() for sr in s.sources]),
+                s.raw_count,
+                s.normalized_count,
+                s.deduped_count,
+                s.filtered_count,
+                s.failed_count,
+                s.report_path,
+                s.log_path,
+                s.run_id,
             ),
         )
 
     def get_by_run_id(self, run_id: str) -> sqlite3.Row | None:
-        return _row(self.conn.execute(
-            "SELECT * FROM runs WHERE run_id = ?", (run_id,)
-        ).fetchone())
+        return _row(self.conn.execute("SELECT * FROM runs WHERE run_id = ?", (run_id,)).fetchone())
 
 
 class FilterDecisionsRepo:
     def __init__(self, conn: sqlite3.Connection) -> None:
         self.conn = conn
 
-    def log(self, run_id: str, paper_id: int | None, decision: str,
-            reason_code: str | None, reason_text: str | None) -> None:
+    def log(
+        self,
+        run_id: str,
+        paper_id: int | None,
+        decision: str,
+        reason_code: str | None,
+        reason_text: str | None,
+    ) -> None:
         self.conn.execute(
             """
             INSERT INTO filter_decisions (run_id, paper_id, decision, reason_code, reason_text, created_at)
@@ -129,10 +176,12 @@ class FilterDecisionsRepo:
         )
 
     def list_by_run(self, run_id: str) -> list[sqlite3.Row]:
-        return list(self.conn.execute(
-            "SELECT * FROM filter_decisions WHERE run_id = ? ORDER BY id",
-            (run_id,),
-        ).fetchall())
+        return list(
+            self.conn.execute(
+                "SELECT * FROM filter_decisions WHERE run_id = ? ORDER BY id",
+                (run_id,),
+            ).fetchall()
+        )
 
 
 class DedupCandidatesRepo:
@@ -150,6 +199,8 @@ class DedupCandidatesRepo:
         return _insert_id(cur)
 
     def list_pending(self) -> list[sqlite3.Row]:
-        return list(self.conn.execute(
-            "SELECT * FROM dedup_candidates WHERE status='pending' ORDER BY id"
-        ).fetchall())
+        return list(
+            self.conn.execute(
+                "SELECT * FROM dedup_candidates WHERE status='pending' ORDER BY id"
+            ).fetchall()
+        )

@@ -3,6 +3,7 @@
 Future MVPs will extend this module with digest generation; for now it only
 emits the deterministic Markdown/JSON outputs of MVP1.
 """
+
 from __future__ import annotations
 
 import json

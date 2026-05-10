@@ -1,10 +1,10 @@
 import pytest
 
 from src.config import RuleFilterSpec
-from src.models.paper import PaperCandidate
-from src.storage.db import open_db, apply_migrations
-from src.storage.repositories import FilterDecisionsRepo
 from src.filter.rule_filter import apply_rule_filter
+from src.models.paper import PaperCandidate
+from src.storage.db import apply_migrations, open_db
+from src.storage.repositories import FilterDecisionsRepo
 
 
 @pytest.fixture
@@ -45,7 +45,9 @@ def test_rule_filter_rejects_missing_abstract(conn):
 
 
 def test_rule_filter_blacklist_keyword(conn):
-    spec = RuleFilterSpec(require_year_after=None, require_abstract=False, blacklist_keywords=["review article only"])
+    spec = RuleFilterSpec(
+        require_year_after=None, require_abstract=False, blacklist_keywords=["review article only"]
+    )
     p = _p(title="t", abstract="this is review article only no method", published_date="2024-01-01")
     out = apply_rule_filter([p], spec=spec, conn=conn, run_id="r1", paper_ids=[1])
     assert out == []

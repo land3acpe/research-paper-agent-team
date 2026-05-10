@@ -4,6 +4,7 @@ MVP1 commands: db-init / discover / run / report
 
 Global options applied via Typer callback for context.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -15,6 +16,7 @@ from src.config import load_config
 from src.logging_config import configure_logging
 from src.orchestrator import run_mvp1_pipeline
 from src.storage.db import apply_migrations, open_db
+from src.utils.runid import ScheduleMode
 
 app = typer.Typer(no_args_is_help=True, help="research-paper-agent-team CLI (MVP1)")
 
@@ -23,7 +25,9 @@ _Profile = Annotated[str, typer.Option("--profile", help="Profile slug under con
 _DryRun = Annotated[bool, typer.Option("--dry-run", help="No DB writes, no external side effects")]
 _LogLevel = Annotated[str, typer.Option("--log-level")]
 _DbPath = Annotated[Path, typer.Option("--db-path", help="SQLite DB path")]
-_DataDir = Annotated[Path, typer.Option("--data-dir", help="data/ root for raw/normalized/reports/logs")]
+_DataDir = Annotated[
+    Path, typer.Option("--data-dir", help="data/ root for raw/normalized/reports/logs")
+]
 
 
 @app.callback()
@@ -54,7 +58,7 @@ def discover_cmd(
     db_path: _DbPath = Path("data/papers.db"),
     data_dir: _DataDir = Path("data"),
     days: Annotated[int, typer.Option("--days")] = 14,
-    schedule_mode: Annotated[str, typer.Option("--mode")] = "manual",
+    schedule_mode: Annotated[ScheduleMode, typer.Option("--mode")] = "manual",
     dry_run: _DryRun = False,
 ) -> None:
     """Discover new papers (fetch -> normalize -> dedupe -> rule_filter -> report)."""
@@ -82,7 +86,7 @@ def run_cmd(
     db_path: _DbPath = Path("data/papers.db"),
     data_dir: _DataDir = Path("data"),
     days: Annotated[int, typer.Option("--days")] = 14,
-    schedule_mode: Annotated[str, typer.Option("--mode")] = "manual",
+    schedule_mode: Annotated[ScheduleMode, typer.Option("--mode")] = "manual",
     dry_run: _DryRun = False,
 ) -> None:
     """End-to-end run. In MVP1 equivalent to `discover`."""

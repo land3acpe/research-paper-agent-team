@@ -37,9 +37,7 @@ def test_paper_candidate_requires_title():
 
 
 def test_run_summary_defaults():
-    s = RunSummary(
-        run_id="x", started_at=datetime.now(UTC).isoformat(), status="running"
-    )
+    s = RunSummary(run_id="x", started_at=datetime.now(UTC).isoformat(), status="running")
     assert s.raw_count == 0
     assert s.errors == []
 
@@ -50,7 +48,5 @@ def test_source_result_minimal():
 
 
 def test_dedup_candidate():
-    d = DedupCandidate(
-        paper_id_a=1, paper_id_b=2, match_type="fuzzy_title", similarity=0.92
-    )
+    d = DedupCandidate(paper_id_a=1, paper_id_b=2, match_type="fuzzy_title", similarity=0.92)
     assert d.status == "pending"

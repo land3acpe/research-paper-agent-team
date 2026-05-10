@@ -1,4 +1,5 @@
 """Tests for the deduplication orchestrator."""
+
 import pytest
 
 from src.dedupe.deduplicator import deduplicate

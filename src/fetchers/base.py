@@ -1,4 +1,5 @@
 """Fetcher abstract base + result DTO."""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

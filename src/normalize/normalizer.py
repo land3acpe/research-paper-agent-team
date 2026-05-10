@@ -6,6 +6,7 @@ Responsibilities:
 - Trim author whitespace
 - Idempotent
 """
+
 from __future__ import annotations
 
 from src.models.paper import PaperCandidate
@@ -19,14 +20,16 @@ def _normalize_doi(doi: str | None) -> str | None:
     s = doi.strip().lower()
     for prefix in ("https://doi.org/", "http://doi.org/", "doi:"):
         if s.startswith(prefix):
-            s = s[len(prefix):]
+            s = s[len(prefix) :]
     return s
 
 
 def normalize_paper(p: PaperCandidate) -> PaperCandidate:
-    return p.model_copy(update={
-        "doi": _normalize_doi(p.doi),
-        "normalized_title": normalize_title(p.title),
-        "title_hash": _title_hash(p.title),
-        "authors": [a.strip() for a in p.authors if a and a.strip()],
-    })
+    return p.model_copy(
+        update={
+            "doi": _normalize_doi(p.doi),
+            "normalized_title": normalize_title(p.title),
+            "title_hash": _title_hash(p.title),
+            "authors": [a.strip() for a in p.authors if a and a.strip()],
+        }
+    )

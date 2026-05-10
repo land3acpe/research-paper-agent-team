@@ -1,14 +1,21 @@
 """Tests for soft deduplication (title_hash, fuzzy_title, title_author_year)."""
+
 from src.dedupe.soft import find_soft_matches
 from src.models.paper import PaperCandidate
 from src.normalize.normalizer import normalize_paper
 
 
-def _make(title: str, authors: list[str] | None = None, year: str | None = "2024") -> PaperCandidate:
-    return normalize_paper(PaperCandidate(
-        source="crossref", title=title, authors=authors or [],
-        published_date=f"{year}-01-01" if year else None,
-    ))
+def _make(
+    title: str, authors: list[str] | None = None, year: str | None = "2024"
+) -> PaperCandidate:
+    return normalize_paper(
+        PaperCandidate(
+            source="crossref",
+            title=title,
+            authors=authors or [],
+            published_date=f"{year}-01-01" if year else None,
+        )
+    )
 
 
 def test_title_hash_match():

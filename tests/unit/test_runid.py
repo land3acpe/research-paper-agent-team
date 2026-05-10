@@ -5,9 +5,7 @@ import pytest
 
 from src.utils.runid import generate_run_id, parse_run_id
 
-RUN_ID_PATTERN = re.compile(
-    r"^[a-z0-9-]+-(daily|weekly|monthly|manual)-\d{8}-\d{6}-[a-z0-9]{8}$"
-)
+RUN_ID_PATTERN = re.compile(r"^[a-z0-9-]+-(daily|weekly|monthly|manual)-\d{8}-\d{6}-[a-z0-9]{8}$")
 
 
 def test_generate_run_id_format():

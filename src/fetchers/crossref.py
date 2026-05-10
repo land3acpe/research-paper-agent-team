@@ -3,6 +3,7 @@
 Endpoint: https://api.crossref.org/works
 Docs: https://api.crossref.org/swagger-ui/index.html
 """
+
 from __future__ import annotations
 
 import re
@@ -66,19 +67,21 @@ class CrossrefFetcher(FetcherBase):
                 abstract_raw = it.get("abstract")
                 abstract = _strip_jats(abstract_raw) if abstract_raw else None
 
-                out.append(PaperCandidate(
-                    source=self.source_name,
-                    source_id=it.get("DOI"),
-                    doi=it.get("DOI"),
-                    title=title,
-                    authors=authors,
-                    venue=venue,
-                    published_date=published,
-                    indexed_date=indexed_dt,
-                    abstract=abstract,
-                    url=it.get("URL"),
-                    raw=it,
-                ))
+                out.append(
+                    PaperCandidate(
+                        source=self.source_name,
+                        source_id=it.get("DOI"),
+                        doi=it.get("DOI"),
+                        title=title,
+                        authors=authors,
+                        venue=venue,
+                        published_date=published,
+                        indexed_date=indexed_dt,
+                        abstract=abstract,
+                        url=it.get("URL"),
+                        raw=it,
+                    )
+                )
             except Exception as e:
                 logger.warning("crossref_parse_item_failed", error=str(e), item_doi=it.get("DOI"))
         return out

@@ -3,6 +3,7 @@
 - Hard dedup: auto-merge based on DOI / source_id (in-memory list).
 - Soft dedup: emit dedup_candidates rows to SQLite for manual review.
 """
+
 from __future__ import annotations
 
 import sqlite3
@@ -30,15 +31,15 @@ def _resolve_db_id(repo: PapersRepo, p: PaperCandidate) -> int | None:
     if p.doi:
         row = repo.get_by_doi(p.doi)
         if row is not None:
-            return row["id"]
+            return int(row["id"])
     if p.source and p.source_id:
         row = repo.get_by_source_id(p.source, p.source_id)
         if row is not None:
-            return row["id"]
+            return int(row["id"])
     if p.title_hash:
         row = repo.get_by_title_hash(p.title_hash)
         if row is not None:
-            return row["id"]
+            return int(row["id"])
     return None
 
 

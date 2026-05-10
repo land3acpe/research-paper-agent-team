@@ -1,4 +1,5 @@
 """Structured logging configuration based on structlog."""
+
 from __future__ import annotations
 
 import logging
@@ -23,9 +24,7 @@ def configure_logging(
     if log_file:
         Path(log_file).parent.mkdir(parents=True, exist_ok=True)
         file_handler = logging.FileHandler(log_file, encoding="utf-8")
-        file_handler.setFormatter(
-            logging.Formatter("%(message)s")
-        )
+        file_handler.setFormatter(logging.Formatter("%(message)s"))
         handlers.append(file_handler)
 
     logging.basicConfig(level=level, handlers=handlers, force=True)

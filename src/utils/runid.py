@@ -2,6 +2,7 @@
 
 Format: {profile_slug}-{schedule_mode}-{YYYYMMDD-HHMMSS}-{shortuuid8}
 """
+
 from __future__ import annotations
 
 import re
@@ -45,9 +46,7 @@ def parse_run_id(run_id: str) -> RunIdParts:
     m = _PATTERN.match(run_id)
     if not m:
         raise ValueError(f"invalid run_id: {run_id}")
-    ts = datetime.strptime(
-        f"{m['date']}{m['time']}", "%Y%m%d%H%M%S"
-    ).replace(tzinfo=UTC)
+    ts = datetime.strptime(f"{m['date']}{m['time']}", "%Y%m%d%H%M%S").replace(tzinfo=UTC)
     return RunIdParts(
         profile_slug=m["slug"],
         schedule_mode=m["mode"],

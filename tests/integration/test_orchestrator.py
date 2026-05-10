@@ -1,4 +1,3 @@
-
 import pytest
 
 from src.config import (
@@ -24,14 +23,24 @@ def _make_config() -> AppConfig:
     return AppConfig(
         schedule=ScheduleSection(enabled=False, mode="weekly", timezone="UTC"),
         window=WindowSection(daily_days=3, weekly_days=14, monthly_days=45),
-        limits=LimitsSection(max_candidates_per_source=10, max_total_candidates=30, max_runtime_minutes=5),
+        limits=LimitsSection(
+            max_candidates_per_source=10, max_total_candidates=30, max_runtime_minutes=5
+        ),
         sources=SourcesConfig(
-            crossref=CrossrefSource(enabled=True, queries=[QuerySpec(name="q1", query="x")], max_results=10),
-            arxiv=ArxivSource(enabled=True, queries=[QuerySpec(name="q1", query="x")], max_results=10),
+            crossref=CrossrefSource(
+                enabled=True, queries=[QuerySpec(name="q1", query="x")], max_results=10
+            ),
+            arxiv=ArxivSource(
+                enabled=True, queries=[QuerySpec(name="q1", query="x")], max_results=10
+            ),
         ),
         profile=ResearchProfile(
-            name="x", slug="dtp-pmsm", field="f",
-            rule_filter=RuleFilterSpec(require_year_after=2018, require_abstract=False, blacklist_keywords=[]),
+            name="x",
+            slug="dtp-pmsm",
+            field="f",
+            rule_filter=RuleFilterSpec(
+                require_year_after=2018, require_abstract=False, blacklist_keywords=[]
+            ),
         ),
     )
 
@@ -53,18 +62,43 @@ def _stub_fetchers(monkeypatch):
 
     def crossref_fetch(self, query, start, end, max_results):
         return FetchResult(
-            source="crossref", query=query, raw_count=2, normalized_count=2,
+            source="crossref",
+            query=query,
+            raw_count=2,
+            normalized_count=2,
             candidates=[
-                PaperCandidate(source="crossref", title="Crossref paper A", doi="10.1/a", abstract="x", published_date="2024-03-15"),
-                PaperCandidate(source="crossref", title="Crossref paper B", doi="10.1/b", abstract="x", published_date="2024-04-15"),
+                PaperCandidate(
+                    source="crossref",
+                    title="Crossref paper A",
+                    doi="10.1/a",
+                    abstract="x",
+                    published_date="2024-03-15",
+                ),
+                PaperCandidate(
+                    source="crossref",
+                    title="Crossref paper B",
+                    doi="10.1/b",
+                    abstract="x",
+                    published_date="2024-04-15",
+                ),
             ],
         )
 
     def arxiv_fetch(self, query, start, end, max_results):
         return FetchResult(
-            source="arxiv", query=query, raw_count=1, normalized_count=1,
+            source="arxiv",
+            query=query,
+            raw_count=1,
+            normalized_count=1,
             candidates=[
-                PaperCandidate(source="arxiv", source_id="2503.99999", title="Arxiv paper A", doi="10.48550/arXiv.2503.99999", abstract="x", published_date="2024-05-15"),
+                PaperCandidate(
+                    source="arxiv",
+                    source_id="2503.99999",
+                    title="Arxiv paper A",
+                    doi="10.48550/arXiv.2503.99999",
+                    abstract="x",
+                    published_date="2024-05-15",
+                ),
             ],
         )
 
@@ -103,8 +137,11 @@ def test_pipeline_dry_run_does_not_write_db(monkeypatch, db_path, data_dir):
     _stub_fetchers(monkeypatch)
     config = _make_config()
     summary = run_mvp1_pipeline(
-        config=config, db_path=db_path, data_dir=data_dir,
-        schedule_mode="manual", dry_run=True,
+        config=config,
+        db_path=db_path,
+        data_dir=data_dir,
+        schedule_mode="manual",
+        dry_run=True,
     )
     # DB file may or may not exist; if it does, it must have no papers
     if db_path.exists():
@@ -121,19 +158,41 @@ def test_pipeline_partial_when_one_source_fails(monkeypatch, db_path, data_dir):
     from src.fetchers import crossref as cr
 
     def crossref_fetch_fail(self, query, start, end, max_results):
-        return FetchResult(source="crossref", query=query, raw_count=0, normalized_count=0,
-                           candidates=[], errors=["crossref: 503"])
+        return FetchResult(
+            source="crossref",
+            query=query,
+            raw_count=0,
+            normalized_count=0,
+            candidates=[],
+            errors=["crossref: 503"],
+        )
 
     def arxiv_fetch_ok(self, query, start, end, max_results):
-        return FetchResult(source="arxiv", query=query, raw_count=1, normalized_count=1,
-                           candidates=[PaperCandidate(source="arxiv", source_id="x", title="ok", abstract="a", published_date="2024-01-01")])
+        return FetchResult(
+            source="arxiv",
+            query=query,
+            raw_count=1,
+            normalized_count=1,
+            candidates=[
+                PaperCandidate(
+                    source="arxiv",
+                    source_id="x",
+                    title="ok",
+                    abstract="a",
+                    published_date="2024-01-01",
+                )
+            ],
+        )
 
     monkeypatch.setattr(cr.CrossrefFetcher, "fetch", crossref_fetch_fail)
     monkeypatch.setattr(ax.ArxivFetcher, "fetch", arxiv_fetch_ok)
 
     config = _make_config()
     summary = run_mvp1_pipeline(
-        config=config, db_path=db_path, data_dir=data_dir,
-        schedule_mode="manual", dry_run=False,
+        config=config,
+        db_path=db_path,
+        data_dir=data_dir,
+        schedule_mode="manual",
+        dry_run=False,
     )
     assert summary.status == "partial"

@@ -1,4 +1,5 @@
 """Title normalization for hashing and fuzzy matching."""
+
 from __future__ import annotations
 
 import re

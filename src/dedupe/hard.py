@@ -1,4 +1,5 @@
 """Hard deduplication based on stable IDs (DOI / arXiv ID / source-specific ID)."""
+
 from __future__ import annotations
 
 from src.models.paper import PaperCandidate

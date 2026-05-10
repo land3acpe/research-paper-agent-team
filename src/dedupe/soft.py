@@ -1,4 +1,5 @@
 """Soft deduplication via title hash, fuzzy title match, and (title, author, year) combinations."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -60,7 +61,5 @@ def find_soft_matches(
                             a.normalized_title[:40], b.normalized_title[:40]
                         )
                         if prefix_sim >= 80:
-                            matches.append(
-                                SoftMatch(i, j, "title_author_year", float(prefix_sim))
-                            )
+                            matches.append(SoftMatch(i, j, "title_author_year", float(prefix_sim)))
     return matches

@@ -1,4 +1,5 @@
 """DedupCandidate model for soft-duplicate review queue."""
+
 from __future__ import annotations
 
 from typing import Literal

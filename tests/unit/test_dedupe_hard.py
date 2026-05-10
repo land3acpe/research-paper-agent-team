@@ -1,5 +1,5 @@
+from src.dedupe.hard import dedupe_hard, find_hard_duplicate_key
 from src.models.paper import PaperCandidate
-from src.dedupe.hard import find_hard_duplicate_key, dedupe_hard
 
 
 def test_find_hard_key_doi():

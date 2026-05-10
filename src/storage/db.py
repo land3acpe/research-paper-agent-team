@@ -1,4 +1,5 @@
 """SQLite connection management and migrations."""
+
 from __future__ import annotations
 
 import sqlite3

@@ -1,4 +1,5 @@
 """Rule-based filter applied before LLM screening (which exists from MVP2)."""
+
 from __future__ import annotations
 
 import sqlite3
@@ -23,7 +24,11 @@ def _check(p: PaperCandidate, spec: RuleFilterSpec) -> tuple[str, str | None, st
     if spec.require_year_after is not None:
         y = _year(p.published_date)
         if y is None or y < spec.require_year_after:
-            return ("reject", "year_too_old", f"published_date={p.published_date} < {spec.require_year_after}")
+            return (
+                "reject",
+                "year_too_old",
+                f"published_date={p.published_date} < {spec.require_year_after}",
+            )
 
     if spec.require_abstract and not (p.abstract and p.abstract.strip()):
         return ("reject", "missing_abstract", "abstract is empty or missing")

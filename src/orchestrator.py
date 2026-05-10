@@ -3,6 +3,7 @@
 Pipeline:
   fetchers (Crossref + arXiv) -> normalize -> dedupe -> rule_filter -> SQLite + report
 """
+
 from __future__ import annotations
 
 import os
@@ -27,7 +28,7 @@ from src.reports.digest_writer import (
 )
 from src.storage.db import apply_migrations, open_db
 from src.storage.repositories import PapersRepo, RunsRepo
-from src.utils.runid import generate_run_id
+from src.utils.runid import ScheduleMode, generate_run_id
 from src.utils.time import compute_window
 
 logger = structlog.get_logger(__name__)
@@ -62,13 +63,15 @@ def _run_fetchers(
                 end=window_end,
                 max_results=config.sources.crossref.max_results,
             )
-            source_results.append(SourceResult(
-                source="crossref",
-                query=q.query,
-                raw_count=res.raw_count,
-                normalized_count=res.normalized_count,
-                errors=res.errors,
-            ))
+            source_results.append(
+                SourceResult(
+                    source="crossref",
+                    query=q.query,
+                    raw_count=res.raw_count,
+                    normalized_count=res.normalized_count,
+                    errors=res.errors,
+                )
+            )
             all_candidates.extend(res.candidates)
 
     if config.sources.arxiv.enabled:
@@ -80,13 +83,15 @@ def _run_fetchers(
                 end=window_end,
                 max_results=config.sources.arxiv.max_results,
             )
-            source_results.append(SourceResult(
-                source="arxiv",
-                query=q.query,
-                raw_count=res.raw_count,
-                normalized_count=res.normalized_count,
-                errors=res.errors,
-            ))
+            source_results.append(
+                SourceResult(
+                    source="arxiv",
+                    query=q.query,
+                    raw_count=res.raw_count,
+                    normalized_count=res.normalized_count,
+                    errors=res.errors,
+                )
+            )
             all_candidates.extend(res.candidates)
 
     return all_candidates, source_results
@@ -100,7 +105,7 @@ def _resolve_paper_id(repo: PapersRepo, p: PaperCandidate, run_id: str) -> int |
         or (p.title_hash and repo.get_by_title_hash(p.title_hash))
     )
     if existing:
-        return existing["id"]
+        return int(existing["id"])
     return repo.insert(p, run_id=run_id)
 
 
@@ -108,7 +113,7 @@ def run_mvp1_pipeline(
     config: AppConfig,
     db_path: Path,
     data_dir: Path,
-    schedule_mode: str = "manual",
+    schedule_mode: ScheduleMode = "manual",
     dry_run: bool = False,
     days: int | None = None,
 ) -> RunSummary:
@@ -182,6 +187,7 @@ def run_mvp1_pipeline(
         finally:
             tmp_conn.close()
     else:
+        assert conn is not None
         passed = apply_rule_filter(
             outcome.unique,
             spec=config.profile.rule_filter,
@@ -210,6 +216,7 @@ def run_mvp1_pipeline(
 
     # ---- 6. Persist run row ----
     if not dry_run:
+        assert conn is not None
         runs_repo = RunsRepo(conn)
         runs_repo.insert(summary, profile_slug=config.profile.slug, schedule_mode=schedule_mode)
         runs_repo.update_summary(summary)

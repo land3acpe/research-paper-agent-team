@@ -88,7 +88,13 @@ def test_runs_update_summary(conn: sqlite3.Connection) -> None:
 
 def test_filter_decisions_log(conn: sqlite3.Connection) -> None:
     repo = FilterDecisionsRepo(conn)
-    repo.log(run_id="rid-1", paper_id=42, decision="reject", reason_code="missing_abstract", reason_text="no abstract")
+    repo.log(
+        run_id="rid-1",
+        paper_id=42,
+        decision="reject",
+        reason_code="missing_abstract",
+        reason_text="no abstract",
+    )
     rows = repo.list_by_run("rid-1")
     assert len(rows) == 1
     assert rows[0]["reason_code"] == "missing_abstract"

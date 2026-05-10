@@ -1,4 +1,5 @@
 """Hashing utilities for paper deduplication."""
+
 from __future__ import annotations
 
 import hashlib

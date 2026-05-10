@@ -3,13 +3,14 @@
 Endpoint: http://export.arxiv.org/api/query
 Returns Atom XML; parsed via feedparser.
 """
+
 from __future__ import annotations
 
 import re
 from datetime import datetime
 from typing import Any
 
-import feedparser
+import feedparser  # type: ignore[import-untyped]
 import structlog
 
 from src.fetchers._http import make_client
@@ -60,20 +61,26 @@ class ArxivFetcher(FetcherBase):
                 if not title:
                     continue
 
-                out.append(PaperCandidate(
-                    source=self.source_name,
-                    source_id=arxiv_id,
-                    doi=f"10.48550/arXiv.{arxiv_id}",
-                    title=title,
-                    authors=authors,
-                    venue="arXiv",
-                    published_date=published,
-                    indexed_date=entry.get("updated", "")[:19] or None,
-                    abstract=(entry.get("summary") or "").strip() or None,
-                    url=html_url or entry.id,
-                    pdf_url=pdf_url,
-                    raw={k: v for k, v in entry.items() if isinstance(v, (str, int, float, bool, list, dict))},
-                ))
+                out.append(
+                    PaperCandidate(
+                        source=self.source_name,
+                        source_id=arxiv_id,
+                        doi=f"10.48550/arXiv.{arxiv_id}",
+                        title=title,
+                        authors=authors,
+                        venue="arXiv",
+                        published_date=published,
+                        indexed_date=entry.get("updated", "")[:19] or None,
+                        abstract=(entry.get("summary") or "").strip() or None,
+                        url=html_url or entry.id,
+                        pdf_url=pdf_url,
+                        raw={
+                            k: v
+                            for k, v in entry.items()
+                            if isinstance(v, (str, int, float, bool, list, dict))
+                        },
+                    )
+                )
             except Exception as e:
                 logger.warning("arxiv_parse_entry_failed", error=str(e), entry_id=entry.get("id"))
         return out
@@ -104,7 +111,8 @@ class ArxivFetcher(FetcherBase):
                 result.candidates = self.parse_response(payload)
                 # Filter by published date
                 result.candidates = [
-                    p for p in result.candidates
+                    p
+                    for p in result.candidates
                     if p.published_date is None
                     or (start.strftime("%Y-%m-%d") <= p.published_date <= end.strftime("%Y-%m-%d"))
                 ]

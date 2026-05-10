@@ -1,4 +1,5 @@
 """Tests for ArxivFetcher."""
+
 from __future__ import annotations
 
 import re
