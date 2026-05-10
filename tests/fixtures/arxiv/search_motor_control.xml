@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:arxiv="http://arxiv.org/schemas/atom">
+  <title>arXiv Query: motor control</title>
+  <id>http://arxiv.org/api/query?search_query=motor+control</id>
+  <updated>2026-05-10T00:00:00Z</updated>
+  <opensearch:totalResults xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">2</opensearch:totalResults>
+  <entry>
+    <id>http://arxiv.org/abs/2503.12345v1</id>
+    <updated>2025-03-15T12:00:00Z</updated>
+    <published>2025-03-15T12:00:00Z</published>
+    <title>Neural network based parameter identification for PMSM</title>
+    <summary>We propose a tiny neural network for online parameter identification of permanent magnet synchronous motors.</summary>
+    <author><name>Alice Author</name></author>
+    <author><name>Bob Researcher</name></author>
+    <arxiv:primary_category term="eess.SY"/>
+    <link rel="alternate" type="text/html" href="http://arxiv.org/abs/2503.12345v1"/>
+    <link rel="related" title="pdf" type="application/pdf" href="http://arxiv.org/pdf/2503.12345v1"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2504.99999v2</id>
+    <updated>2025-04-20T08:00:00Z</updated>
+    <published>2025-04-18T08:00:00Z</published>
+    <title>Sliding mode observer for multiphase machines</title>
+    <summary>An extended sliding mode observer is presented for multiphase PMSM drives.</summary>
+    <author><name>Charlie Engineer</name></author>
+    <arxiv:primary_category term="eess.SY"/>
+    <link rel="alternate" type="text/html" href="http://arxiv.org/abs/2504.99999v2"/>
+  </entry>
+</feed>

@@ -92,7 +92,7 @@ def _run_fetchers(
     return all_candidates, source_results
 
 
-def _resolve_paper_id(repo: PapersRepo, p: PaperCandidate) -> int | None:
+def _resolve_paper_id(repo: PapersRepo, p: PaperCandidate, run_id: str) -> int | None:
     """Look up a paper in the DB and return its id, inserting if not found."""
     existing = (
         (p.doi and repo.get_by_doi(p.doi))
@@ -101,7 +101,7 @@ def _resolve_paper_id(repo: PapersRepo, p: PaperCandidate) -> int | None:
     )
     if existing:
         return existing["id"]
-    return repo.insert(p)
+    return repo.insert(p, run_id=run_id)
 
 
 def run_mvp1_pipeline(
@@ -159,13 +159,13 @@ def run_mvp1_pipeline(
 
         # Ensure every candidate has a DB row so soft-dedup can reference paper_ids.
         for p in candidates:
-            _resolve_paper_id(papers_repo, p)
+            _resolve_paper_id(papers_repo, p, run_id)
 
         outcome = deduplicate(candidates, conn=conn)
         summary.deduped_count = len(outcome.unique)
 
         # Resolve deduped subset to DB ids for the filter step.
-        deduped_ids = [_resolve_paper_id(papers_repo, p) for p in outcome.unique]
+        deduped_ids = [_resolve_paper_id(papers_repo, p, run_id) for p in outcome.unique]
 
     # ---- 4. Rule Filter ----
     if dry_run:

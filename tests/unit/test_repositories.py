@@ -27,7 +27,7 @@ def conn(tmp_path: Path) -> Generator[sqlite3.Connection, None, None]:
 def test_papers_insert_and_lookup_by_doi(conn: sqlite3.Connection) -> None:
     repo = PapersRepo(conn)
     p = PaperCandidate(source="crossref", title="X", doi="10.1/abc", title_hash="h1")
-    pid = repo.insert(p)
+    pid = repo.insert(p, run_id="r1")
     row = repo.get_by_doi("10.1/abc")
     assert row is not None
     assert row["id"] == pid
@@ -36,7 +36,7 @@ def test_papers_insert_and_lookup_by_doi(conn: sqlite3.Connection) -> None:
 def test_papers_lookup_by_title_hash(conn: sqlite3.Connection) -> None:
     repo = PapersRepo(conn)
     p = PaperCandidate(source="crossref", title="X", title_hash="h2")
-    repo.insert(p)
+    repo.insert(p, run_id="r2")
     assert repo.get_by_title_hash("h2") is not None
     assert repo.get_by_title_hash("missing") is None
 
@@ -44,8 +44,19 @@ def test_papers_lookup_by_title_hash(conn: sqlite3.Connection) -> None:
 def test_papers_lookup_by_source_id(conn: sqlite3.Connection) -> None:
     repo = PapersRepo(conn)
     p = PaperCandidate(source="arxiv", source_id="2305.99999", title="X", title_hash="h3")
-    repo.insert(p)
+    repo.insert(p, run_id="r3")
     assert repo.get_by_source_id("arxiv", "2305.99999") is not None
+
+
+def test_papers_list_by_run_filters(conn: sqlite3.Connection) -> None:
+    repo = PapersRepo(conn)
+    p1 = PaperCandidate(source="crossref", title="A", doi="10.1/a", title_hash="h1")
+    p2 = PaperCandidate(source="crossref", title="B", doi="10.2/b", title_hash="h2")
+    repo.insert(p1, run_id="r1")
+    repo.insert(p2, run_id="r2")
+    r1_papers = repo.list_by_run("r1")
+    assert len(r1_papers) == 1
+    assert r1_papers[0]["doi"] == "10.1/a"
 
 
 def test_runs_insert_and_get(conn: sqlite3.Connection) -> None:

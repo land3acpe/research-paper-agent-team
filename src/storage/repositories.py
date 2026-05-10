@@ -28,19 +28,19 @@ class PapersRepo:
     def __init__(self, conn: sqlite3.Connection) -> None:
         self.conn = conn
 
-    def insert(self, p: PaperCandidate, status: str = "candidate") -> int:
+    def insert(self, p: PaperCandidate, status: str = "candidate", run_id: str | None = None) -> int:
         cur = self.conn.execute(
             """
             INSERT INTO papers (
                 doi, title, normalized_title, title_hash, source, source_id,
                 url, pdf_url, authors_json, venue, published_date, indexed_date,
-                abstract, keywords_json, status, raw_json, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                abstract, keywords_json, status, raw_json, run_id, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 p.doi, p.title, p.normalized_title, p.title_hash, p.source, p.source_id,
                 p.url, p.pdf_url, json.dumps(p.authors), p.venue, p.published_date, p.indexed_date,
-                p.abstract, json.dumps(p.keywords), status, json.dumps(p.raw), _now(), _now(),
+                p.abstract, json.dumps(p.keywords), status, json.dumps(p.raw), run_id, _now(), _now(),
             ),
         )
         return _insert_id(cur)
@@ -64,10 +64,9 @@ class PapersRepo:
         ).fetchone())
 
     def list_by_run(self, run_id: str) -> list[sqlite3.Row]:
-        # Note: papers don't carry run_id directly; we'd track via a join table in future MVPs.
-        # For MVP1 we expose all-papers listing for reports.
         return list(self.conn.execute(
-            "SELECT * FROM papers ORDER BY created_at DESC"
+            "SELECT * FROM papers WHERE run_id = ? ORDER BY created_at DESC",
+            (run_id,),
         ).fetchall())
 
 

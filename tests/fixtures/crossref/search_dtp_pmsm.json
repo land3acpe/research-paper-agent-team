@@ -1,0 +1,28 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message": {
+    "total-results": 2,
+    "items": [
+      {
+        "DOI": "10.1109/TIE.2024.001",
+        "title": ["Harmonic current suppression for dual three-phase PMSM"],
+        "author": [{"given": "A.", "family": "Author"}, {"given": "B.", "family": "Author"}],
+        "container-title": ["IEEE Transactions on Industrial Electronics"],
+        "issued": {"date-parts": [[2024, 3, 15]]},
+        "created": {"date-time": "2024-03-20T00:00:00Z"},
+        "abstract": "<jats:p>This paper proposes a method for harmonic current suppression in dual three-phase PMSM drives.</jats:p>",
+        "URL": "https://doi.org/10.1109/TIE.2024.001"
+      },
+      {
+        "DOI": "10.1109/TPEL.2024.002",
+        "title": ["Vector space decomposition for multiphase motors"],
+        "author": [{"given": "C.", "family": "Researcher"}],
+        "container-title": ["IEEE Transactions on Power Electronics"],
+        "issued": {"date-parts": [[2024, 5, 1]]},
+        "created": {"date-time": "2024-05-05T00:00:00Z"},
+        "URL": "https://doi.org/10.1109/TPEL.2024.002"
+      }
+    ]
+  }
+}
